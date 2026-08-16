@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  --color-felt-950: #071810;
+  --color-felt-900: #0a2015;
+  --color-felt-800: #0e2a1b;
+  --color-felt-700: #143824;
+  --color-felt-600: #1b4a2f;
+  --color-felt-500: #256340;
+  --color-felt-400: #3a8a5c;
+
+  --color-gold-200: #f6e3b0;
+  --color-gold-300: #f0cf87;
+  --color-gold-400: #e8b64c;
+  --color-gold-500: #d4a437;
+  --color-gold-600: #b8862a;
+  --color-gold-700: #8f671e;
+
+  --color-ivory-50: #faf4e4;
+  --color-ivory-100: #f4ead2;
+  --color-ivory-300: #e2d3ab;
+
+  --color-cardred-500: #c22e3a;
+  --color-cardred-600: #a02130;
+  --color-cardred-700: #7f1a26;
+  --color-cardred-900: #4a1016;
+
+  --color-wood-600: #6b4426;
+  --color-wood-700: #52321b;
+  --color-wood-800: #3c2412;
+  --color-wood-900: #2a180b;
+
+  --color-ink-900: #17130c;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-felt-950);
+  color: var(--color-ivory-100);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(232, 182, 76, 0.35);
+  color: #faf4e4;
+}
+
+/* ---------- 3D 卡片 ---------- */
+.perspective-card {
+  perspective: 900px;
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.35, 0.1, 0.25, 1.08);
+}
+.card-inner.rotated {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-face-front {
+  transform: rotateY(180deg);
+}
+
+/* 可点击暗牌的悬停手感 */
+.card-tilt:not(:disabled) .card-inner:not(.rotated) {
+  transition: transform 0.55s cubic-bezier(0.35, 0.1, 0.25, 1.08);
+}
+.card-tilt:not(:disabled):hover .card-inner:not(.rotated),
+.card-tilt:not(:disabled):focus-visible .card-inner:not(.rotated) {
+  transform: translateY(-7px) rotateZ(1.6deg) scale(1.04);
+}
+.card-tilt:not(:disabled):active .card-inner:not(.rotated) {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* ---------- 牌背花纹 ---------- */
+.card-back-pattern {
+  background-color: #7f1a26;
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(240, 207, 135, 0.16) 0 1.5px,
+      transparent 1.5px 9px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(240, 207, 135, 0.16) 0 1.5px,
+      transparent 1.5px 9px
+    );
+}
+
+/* ---------- 关键帧 ---------- */
+@keyframes deal-in {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) rotate(4deg) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+  }
+}
+.deal-in {
+  animation: deal-in 0.5s cubic-bezier(0.3, 0.7, 0.3, 1.1) both;
+}
+
+@keyframes score-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.22);
+    color: #f0cf87;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.score-pop {
+  animation: score-pop 0.45s ease-out both;
+}
+
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-9px) rotate(-0.4deg); }
+  30% { transform: translateX(8px) rotate(0.4deg); }
+  45% { transform: translateX(-7px); }
+  60% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
+  90% { transform: translateX(2px); }
+}
+.shake-x {
+  animation: shake-x 0.55s ease-in-out both;
+}
+
+@keyframes flash-red {
+  0% { opacity: 0; }
+  25% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.flash-red {
+  animation: flash-red 0.8s ease-out both;
+}
+
+@keyframes fade-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-slide-in {
+  animation: fade-slide-in 0.4s ease-out both;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-30px) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(620px) rotate(var(--spin, 680deg));
+    opacity: 0;
+  }
+}
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  animation: confetti-fall var(--dur, 1.3s) cubic-bezier(0.3, 0.4, 0.6, 1) both;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes float-suit {
+  0%, 100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-22px) rotate(calc(var(--tilt, 0deg) + 7deg));
+  }
+}
+.float-suit {
+  animation: float-suit var(--dur, 9s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes zero-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(194, 46, 58, 0.75), 0 10px 26px rgba(0, 0, 0, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(194, 46, 58, 0), 0 10px 26px rgba(0, 0, 0, 0.45);
+  }
+}
+.zero-ring {
+  animation: zero-ring 1.3s ease-out infinite;
+}
+
+@keyframes shine-sweep {
+  0% { transform: translateX(-130%) skewX(-18deg); }
+  100% { transform: translateX(230%) skewX(-18deg); }
+}
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 252, 240, 0.55),
+    transparent
+  );
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+.btn-shine:hover::after {
+  animation: shine-sweep 0.7s ease-out both;
+}
+
+@keyframes bank-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(232, 182, 76, 0.45), 0 12px 30px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(232, 182, 76, 0), 0 12px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+.bank-glow {
+  animation: bank-glow 1.6s ease-out infinite;
+}
+
+@keyframes rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise-in 0.55s cubic-bezier(0.25, 0.7, 0.3, 1) both;
+}
+
+/* ---------- 细滚动条 ---------- */
+.scroll-slim::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgba(232, 182, 76, 0.35);
+  border-radius: 999px;
+}
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 182, 76, 0.35) rgba(255, 255, 255, 0.04);
+}
